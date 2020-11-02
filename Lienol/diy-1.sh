@@ -1,31 +1,40 @@
 #!/bin/bash
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-#
+# 修改openwrt登陆地址,把下面的192.168.123.1修改成你想要的就可以了，其他的不要动
+sed -i 's/192.168.1.1/192.168.123.1/g' package/base-files/files/bin/config_generate
+
+#取消掉feeds.conf.default文件里面的helloworld的#注释
+#sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default  #使用源码自带ShadowSocksR Plus+出国软件
+
+# 版本号里显示一个自己的名字
+#sed -i "s/OpenWrt /20201025 build $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" package/lean/default-settings/files/zzz-default-settings
+
+# Add a feed source增加默认源地址
+sed -i '$a src-git kenzok https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+
+# 修改主机名字，把OpenWrt-123修改你喜欢的就行（不能纯数字或者使用中文）
+sed -i 's/OpenWrt/K2P/g' ./package/base-files/files/bin/config_generate
+
+# 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
+sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings 
+
+#sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=4.14/g' ./target/linux/ramips/Makefile  #修改内核版本
+#sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=4.14/g' ./target/linux/ramips/Makefile  #修改内核版本
 
 #添加自定义插件链接（自己想要什么就github里面搜索然后添加）
-git clone -b 18.06 https://github.com/garypang13/luci-theme-edge.git package/diy/luci-theme-edge  #主题-edge
-git clone https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom.git package/diy/luci-theme-infinityfreedom  #透明主题
-git clone -b master https://github.com/vernesong/OpenClash.git package/diy/luci-app-openclash  #openclash出国软件
-git clone https://github.com/frainzy1477/luci-app-clash.git package/diy/luci-app-clash  #clash出国软件
-git clone https://github.com/tty228/luci-app-serverchan.git package/diy/luci-app-serverchan  #微信推送
-git clone -b lede https://github.com/pymumu/luci-app-smartdns.git package/diy/luci-app-smartdns  #smartdns DNS加速
-git clone https://github.com/garypang13/luci-app-eqos.git package/diy/luci-app-eqos  #内网IP限速工具
-git clone https://github.com/jerrykuku/node-request.git package/diy/node-request  #京东签到依赖
-git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git package/diy/luci-app-jd-dailybonus  #京东签到
+# git clone -b 18.06 https://github.com/garypang13/luci-theme-edge package/luci-theme-edge  #主题-edge-动态登陆界面
+git clone -b master https://github.com/vernesong/OpenClash.git package/luci-app-openclash  #openclash出国软件
+git clone https://github.com/frainzy1477/luci-app-clash package/luci-app-clash  #clash出国软件
+git clone https://github.com/tty228/luci-app-serverchan package/luci-app-serverchan  #微信推送
+git clone -b lede https://github.com/pymumu/luci-app-smartdns.git package/luci-app-smartdns  #smartdns DNS加速
+git clone https://github.com/kuoruan/luci-app-frpc package/luci-app-app-frpc
 
-#增加LEDE的ShadowSocksR Plus+出国软件 (源码自带passwall出国软件)
-sed -i '$a src-git helloworld https://github.com/fw876/helloworld' feeds.conf.default
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/shadowsocksr-libev package/diy/shadowsocksr-libev
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/pdnsd-alt package/diy/pdnsd-alt
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/microsocks package/diy/microsocks
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/dns2socks package/diy/dns2socks
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/simple-obfs package/diy/simple-obfs
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/v2ray-plugin package/diy/v2ray-plugin
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/v2ray package/diy/v2ray
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/trojan package/diy/trojan
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ipt2socks package/diy/ipt2socks
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2 package/diy/redsocks2
+svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-ssr-plus package/luci-app-ssr-plus
+svn co https://github.com/firker/diy-ziyong/trunk/luci-app-adguardhome package/luci-app-adguardhome
+svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol/luci-app-passwall package/luci-app-passwall
+svn co https://github.com/xiaorouji/openwrt-package/trunk/package/brook package/brook
+svn co https://github.com/xiaorouji/openwrt-package/trunk/package/chinadns-ng package/chinadns-ng
+svn co https://github.com/xiaorouji/openwrt-package/trunk/package/tcping package/tcping
+svn co https://github.com/xiaorouji/openwrt-package/trunk/package/trojan-go package/trojan-go
+svn co https://github.com/xiaorouji/openwrt-package/trunk/package/trojan-plus package/trojan-plus
 
-rm -rf ./package/lean/luci-theme-argon && git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/diy/luci-theme-argon  #新的argon主题
-#全新的[argon-主题]此主题玩法很多,这里看说明【https://github.com/jerrykuku/luci-theme-argon/blob/18.06/README_ZH.md】
-#用WinSCP连接openwrt，在/www/luci-static/argon里面创建background文件夹（如果本身就有background就不需要创建）来存放jpg png gif格式图片可以自定义登陆界面，gif图片为动态登陆界面
+rm -rf ./package/lean/luci-theme-argon && git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon  #新的argon主题
