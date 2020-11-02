@@ -9,13 +9,13 @@
 
 name: 编译Lede-OpenWrt固件
 
-on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        required: true
-        default: 'Lede-openwrt'
+#on:
+ # workflow_dispatch:
+  #  inputs:
+   #   name:
+   #     description: 'Person to greet'
+   #     required: true
+   #     default: 'Lede-openwrt'
 
 
 #编辑任意指定文件触发开始编译
